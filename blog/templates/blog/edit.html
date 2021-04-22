@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Редактирование поста{% endblock title %}
+{% block body %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ images_form.management_form }}
+    <table>
+      {% for i_form in images_form %}
+        {{ i_form.as_table }}
+      {% endfor %}
+    </table>
+    <button type="submit">Сохранить</button>
+  </form>
+{% endblock body %}
