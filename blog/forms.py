@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Post, PostImage
+from .models import Post, PostImage, Comment
 
 
 class CreatePostForm(forms.ModelForm):
@@ -27,4 +27,10 @@ ImageFormSet = forms.modelformset_factory(
 class UpdatePostForm(forms.ModelForm):
     class Meta:
         model = Post
+        fields = ['content', ]
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
         fields = ['content', ]

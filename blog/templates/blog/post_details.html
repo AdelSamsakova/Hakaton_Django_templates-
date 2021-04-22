@@ -13,4 +13,20 @@
         {% endfor %}
         <p><a href="{% url 'post-edit' post.id %}">Редактировать</a> или <a href="{% url 'post-delete' post.id %}">Удалить</a></p>
     </div>
+    <div>
+        <h3>
+            Комментарии:
+        </h3>
+        {% for comment in comments %}
+        <h3>{{ comment.author }}</h3><span>{{ comment.date_posted}}</span>
+        <h4>{{ comment.content }}</h4>
+        {% endfor %}
+
+        <p>Добавить комментарий</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
 {% endblock body %}

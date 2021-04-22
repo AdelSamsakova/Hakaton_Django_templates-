@@ -12,7 +12,7 @@
             {% for i in post.images.all %}
                 <img src="{{ i.image.url }}" alt="{{ post.author }}" width="300">
             {% endfor %}
-        <p>Комментарии</p>
+        <a href="{% url 'post-details' pk=post.pk %}"><p>Комментарии</p></a>
     </div>
     {% endfor %}
     <div class="pagination">
