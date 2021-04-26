@@ -1,0 +1,46 @@
+{% extends 'base2.html' %}
+
+{% block body %}
+            {% for post in posts %}
+            <div class="row tm-row">
+                <article class="col-12 col-md-6 tm-post">
+                    <hr class="tm-hr-primary">
+                    <h1 class="tm-color-primary">{{ post.author }}</h1>
+                    <p class="tm-pt-30">
+                        {{ post.content }}
+                    </p>
+                        <div class="tm-post-link-inner">
+                            {% for i in post.images.all %}
+                            <a href="{% url 'post-details' pk=post.pk %}"><img src="{{ i.image.url }}" alt="{{ post.author }}" class="img-fluid"></a>
+                            {% endfor %}
+                        </div>
+                    <div class="d-flex justify-content-between tm-pt-45">
+                        <span class="tm-color-primary">{{ post.date_posted }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span><a href="{% url 'post-details' pk=post.pk %}"><p>Комментарии</p></a></span>
+                    </div>
+                </article>
+                </div>
+                {% endfor %}
+            <div class="row tm-row tm-mt-100 tm-mb-75">
+                <div class="tm-prev-next-wrapper">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20">Предыдущая страница</a>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Следующая страница</a>
+                    {% endif %}
+                </div>
+                <div class="tm-paging-wrapper">
+                    <span class="d-inline-block mr-3">Страница  </span>
+                    <nav class="tm-paging-nav d-inline-block">
+                        <ul>
+                            <li class="tm-paging-item active">
+                        <span class="mb-2 tm-btn tm-paging-link">{{ page_obj.number }}</span>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>                
+            </div>
+{% endblock body %}

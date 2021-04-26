@@ -1,0 +1,57 @@
+{% extends 'base2.html' %}
+
+{% block body %}
+            <div class="row tm-row">
+                <div class="col-12">
+                    <hr class="tm-hr-primary tm-mb-55">
+                    <div class="mb-4">
+                            <h1 class="pt-2 tm-color-primary tm-post-title">{{ post.author }}</h1>
+                            <p class="tm-color-primary">{{ post.date_posted }}
+                            <h5 style="color: gray; ">
+                            {{ post.content }}
+                            </h5>
+                        </div>
+                    {% for i in post.images.all %}
+                        <img src="{{ i.image.url }}" alt="{{post.author}}" width="500">
+                    {% endfor %}
+                </div>
+            </div>
+                <p><a href="{% url 'post-edit' post.id %}" class="tm-color-primary"><i class="fas fa-pen"></i>Редактировать</a></p>
+                <p><a href="{% url 'post-delete' post.id %}" class="tm-color-primary"><i class="fas fa-times"></i>Удалить</a></p>
+            <div class="row tm-row">
+                <div class="col-lg-8 tm-post-col">
+                    <div class="tm-post-full">
+                        <hr class="tm-hr-primary tm-mb-45">
+                        <div>
+                            <h2 class="tm-color-primary tm-post-title">Комментарии</h2>
+                            {% for comment in comments %}
+                            <div class="tm-comment tm-mb-45">
+                                <figure class="tm-comment-figure">
+                                    <img src="/media/avatar.jpg" alt="Image" class="mb-2 rounded-circle img-thumbnail" width="100">
+                                    <figcaption class="tm-color-primary text-center">{{ comment.author }}</figcaption>
+                                </figure>
+                                <div>
+                                    <p>
+                                        {{ comment.content }}
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="tm-color-primary">{{ comment.date_posted }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <form action="" class="mb-5 tm-comment-form" method="post">
+                                <h2 class="tm-color-primary tm-post-title mb-4">Добавить комментарий: </h2>
+                                <div class="mb-4">
+                                    <div class="mb-4">
+                                        {% csrf_token %}
+                                        {{ form.as_p }}
+                                    </div>
+                                <div class="text-right">
+                                    <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock body %}

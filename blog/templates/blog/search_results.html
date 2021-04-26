@@ -1,0 +1,11 @@
+{% extends 'base2.html' %}
+
+{% block body %}
+  <hr class="tm-hr-primary">
+  <h1 class="tm-color-primary">Результаты поиска:</h1>
+  {% for blog in results %}
+    <div class="tm-pt-30">
+      <p><a href="{% url 'post-details' blog.id %}" class="tm-color-primary">{{ blog.content }}</a></p>
+    </div>
+  {% endfor %}
+{% endblock body %}

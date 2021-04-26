@@ -32,5 +32,8 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post_connected = models.ForeignKey(Post, on_delete=models.CASCADE)
 
+    def get_absolute_url(self):
+        return reverse_lazy('post-details', kwargs={'pk': self.post_connected.id})
+
 
 
