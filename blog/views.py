@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime, timedelta
 
 import django_filters
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
@@ -9,7 +10,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 
-from blog.forms import CreatePostForm, ImageFormSet, UpdatePostForm, CommentForm, SearchForm
+from blog.forms import CreatePostForm, ImageFormSet, CommentForm, SearchForm, UpdatePostForm
 from blog.models import Post, PostImage, Comment
 
 
@@ -45,7 +46,7 @@ class PostDetailsView(LoginRequiredMixin, DetailView):
         return redirect(new_comment.get_absolute_url())
 
 
-class CreatePostView(LoginRequiredMixin, View):
+class CreatePostView(LoginRequiredMixin, CreateView):
     def get(self, request):
         form = CreatePostForm(instance=self.request.user)
         images_form = ImageFormSet(queryset=PostImage.objects.none())
@@ -53,6 +54,7 @@ class CreatePostView(LoginRequiredMixin, View):
 
     def post(self, request):
         form = CreatePostForm(request.POST)
+        form.instance.author = self.request.user
         images_form = ImageFormSet(request.POST,
                                    request.FILES,
                                    queryset=PostImage.objects.none())
@@ -67,23 +69,33 @@ class CreatePostView(LoginRequiredMixin, View):
         print(form.errors, images_form.errors)
 
 
-class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
-    fields = ['content']
-    template_name = 'blog/edit.html'
-    success_url = '/'
+class PostEditView(View):
+    def get(self, request, pk):
+        posts = get_object_or_404(Post, pk=pk)
+        form = UpdatePostForm(instance=posts)
+        images_form = ImageFormSet(queryset=posts.images.all())
+        return render(request, 'blog/edit.html', locals())
 
-    def form_valid(self, form):
+    def post(self, request, pk):
+        posts = get_object_or_404(Post, pk=pk)
+        form = UpdatePostForm(instance=posts, data=request.POST)
         form.instance.author = self.request.user
-        return super().form_valid(form)
-
-    def test_func(self):
-        return check_users(self.get_object().author, self.request.user)
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['tag_line'] = 'Изменить пост'
-        return data
+        images_form = ImageFormSet(request.POST,
+                                   request.FILES,
+                                   queryset=posts.images.all())
+        if form.is_valid() and images_form.is_valid():
+            posts = form.save()
+            for i_form in images_form.cleaned_data:
+                image = i_form.get('image')
+                if image is not None and not PostImage.objects.filter(post=posts, image=image).exists():
+                    pic = PostImage(post=posts, image=image)
+                    pic.save()
+            for i_form in images_form.deleted_forms:
+                image = i_form.cleaned_data.get('id')
+                if image is not None:
+                    image.delete()
+            return redirect(posts.get_absolute_url())
+        print(form.errors, images_form.errors)
 
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -102,12 +114,15 @@ class SearchResultsView(View):
         return render(request, 'blog/search_results.html', locals())
 
 
-def user_search(request, ):
-    form = SearchForm()
-    search = request.GET.get('search', '')
-    if search:
-        users = User.objects.filter(username__icontains=search)
-    else:
-        users = User.objects.all()
-    return render(request, 'blog/search_results.html', locals())
+# def beats_by_user(request, author):
+#     beats = Post.objects.get(author=author)
+#     return render(request, 'blog/post_filter.html', {'beats': beats})
+
+
+class PostFilter(django_filters.FilterSet):
+    author = django_filters.CharFilter('author')
+
+    class Meta:
+        model = Post
+        fields = ['author', ]
 

@@ -1,5 +1,6 @@
 from django.urls import path
 
+from blog import views
 from blog.views import PostListView, PostDetailsView, CreatePostView, PostDeleteView, PostEditView, SearchResultsView
 
 urlpatterns = [

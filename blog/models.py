@@ -20,6 +20,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('post-details', kwargs={'pk': self.id})
 
+    class Meta:
+        ordering = ['-date_posted']
+
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')

@@ -1,17 +1,9 @@
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.contrib.auth.views import LogoutView
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, user_logged_out, logout
-from django.urls import reverse_lazy, reverse
-from django.views import View
-from django.views.generic import CreateView
+from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
 
 from .forms import LoginForm, UserRegistrationForm
 from django.contrib.auth.decorators import login_required
-
-from .models import Profile
 
 
 @login_required

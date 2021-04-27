@@ -4,9 +4,10 @@ from .models import Post, PostImage, Comment
 
 
 class CreatePostForm(forms.ModelForm):
+
     class Meta:
         model = Post
-        fields = ['content', 'author']
+        fields = ['content']
 
 
 class ImageForm(forms.ModelForm):

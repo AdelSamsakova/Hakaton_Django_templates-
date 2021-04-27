@@ -4,7 +4,7 @@
     <h1>Вы действительно хотите удалить этот пост?</h1>
     <form method="post">
         {% csrf_token %}
-        <button type="submit">Удалить</button>
-        <button><a href="{% url 'post-details' post.id %}" style="color: black">Отмена</a></button>
+        <button type="submit" class="tm-color-primary">Удалить</button>
+        <button><a href="{% url 'post-details' post.id %}" class="tm-color-primary">Отмена</a></button>
     </form>
 {% endblock body %}
