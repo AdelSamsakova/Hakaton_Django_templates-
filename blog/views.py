@@ -114,15 +114,11 @@ class SearchResultsView(View):
         return render(request, 'blog/search_results.html', locals())
 
 
-# def beats_by_user(request, author):
-#     beats = Post.objects.get(author=author)
-#     return render(request, 'blog/post_filter.html', {'beats': beats})
-
-
-class PostFilter(django_filters.FilterSet):
-    author = django_filters.CharFilter('author')
-
-    class Meta:
-        model = Post
-        fields = ['author', ]
-
+def post_filter(request, types):
+    today = datetime.today()
+    if types == 1:
+        posts = Post.objects.filter(date_posted__year=today.year, date_posted__month=today.month, date_posted__day=today.day)
+    if types == 2:
+        prev = datetime.today() + timedelta(days=-7)
+        posts = Post.objects.filter(date_posted__range=[prev, today])
+    return render(request, "blog/post_filter.html", {"posts": posts})

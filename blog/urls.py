@@ -10,4 +10,5 @@ urlpatterns = [
     path('posts/<int:pk>', PostDetailsView.as_view(), name='post-details'),
     path('posts/delete/<int:pk>', PostDeleteView.as_view(), name='post-delete'),
     path('posts/edit/<int:pk>', PostEditView.as_view(), name='post-edit'),
+    path('posts/filter<int:types>', views.post_filter, name='post-filter'),
 ]

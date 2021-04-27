@@ -1,0 +1,6 @@
+{% extends 'base2.html' %}
+{% block body %}
+{% for post in posts %}
+      <p><a href="{% url 'post-details' post.id %}" class="tm-color-primary">{{ post.content }}</a></p>
+{% endfor %}
+{% endblock body %}
