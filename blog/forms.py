@@ -6,7 +6,7 @@ from .models import Post, PostImage, Comment
 class CreatePostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['content', 'author']
 
 
 class ImageForm(forms.ModelForm):
@@ -34,3 +34,7 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content', ]
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField()

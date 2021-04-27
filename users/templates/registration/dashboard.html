@@ -1,0 +1,12 @@
+{% extends "blog/index.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+  <h1>Dashboard</h1>
+<p>Welcome to your dashboard.</p>
+{% for post in posts %}
+  {% if post.author == user %}
+  {{ post.content }}
+  {{ post.date_posted}}
+  {% endif %}
+{% endfor %}
+{% endblock body %}
