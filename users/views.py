@@ -29,7 +29,7 @@ def user_login(request):
             return HttpResponse('Invalid login')
     else:
         form = LoginForm()
-        return render(request, 'users/login.html', {'form': form})
+        return render(request, 'registrations/login.html', {'form': form})
 
 
 def logout_view(request):

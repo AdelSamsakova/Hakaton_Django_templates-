@@ -5,6 +5,6 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="tm-color-primary">Удалить</button>
-        <button><a href="{% url 'post-details' post.id %}" class="tm-color-primary">Отмена</a></button>
+        <a href="{% url 'post-details' post.id %}" class="tm-color-primary">Отмена</a>
     </form>
 {% endblock body %}

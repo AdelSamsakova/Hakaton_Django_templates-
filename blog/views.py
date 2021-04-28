@@ -68,34 +68,56 @@ class CreatePostView(LoginRequiredMixin, CreateView):
             return redirect(posts.get_absolute_url())
         print(form.errors, images_form.errors)
 
+#
+# class PostEditView(LoginRequiredMixin, UserPassesTestMixin, View):
+#     model = Post
+#     fields = ['content']
+#     template_name = 'blog/edit.html'
+#     success_url = '/'
+#
+#     def get(self, request, pk):
+#         posts = get_object_or_404(Post, pk=pk)
+#         form = UpdatePostForm(instance=posts)
+#         images_form = ImageFormSet(queryset=posts.images.all())
+#         return render(request, 'blog/edit.html', locals())
+#
+#     def post(self, request, pk):
+#         posts = get_object_or_404(Post, pk=pk)
+#         form = UpdatePostForm(instance=posts, data=request.POST)
+#         form.instance.author = self.request.user
+#         images_form = ImageFormSet(request.POST,
+#                                    request.FILES,
+#                                    queryset=posts.images.all())
+#         if form.is_valid() and images_form.is_valid():
+#             posts = form.save()
+#             for i_form in images_form.cleaned_data:
+#                 image = i_form.get('image')
+#                 if image is not None and not PostImage.objects.filter(post=posts, image=image).exists():
+#                     pic = PostImage(post=posts, image=image)
+#                     pic.save()
+#             for i_form in images_form.deleted_forms:
+#                 image = i_form.cleaned_data.get('id')
+#                 if image is not None:
+#                     image.delete()
+#             return redirect(posts.get_absolute_url())
+#         print(form.errors, images_form.errors)
+#
+#     def test_func(self):
+#         return check_users(self.get_object().author, self.request.user)
 
-class PostEditView(View):
-    def get(self, request, pk):
-        posts = get_object_or_404(Post, pk=pk)
-        form = UpdatePostForm(instance=posts)
-        images_form = ImageFormSet(queryset=posts.images.all())
-        return render(request, 'blog/edit.html', locals())
 
-    def post(self, request, pk):
-        posts = get_object_or_404(Post, pk=pk)
-        form = UpdatePostForm(instance=posts, data=request.POST)
+class PostEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['content']
+    template_name = 'blog/edit.html'
+    success_url = '/'
+
+    def form_valid(self, form):
         form.instance.author = self.request.user
-        images_form = ImageFormSet(request.POST,
-                                   request.FILES,
-                                   queryset=posts.images.all())
-        if form.is_valid() and images_form.is_valid():
-            posts = form.save()
-            for i_form in images_form.cleaned_data:
-                image = i_form.get('image')
-                if image is not None and not PostImage.objects.filter(post=posts, image=image).exists():
-                    pic = PostImage(post=posts, image=image)
-                    pic.save()
-            for i_form in images_form.deleted_forms:
-                image = i_form.cleaned_data.get('id')
-                if image is not None:
-                    image.delete()
-            return redirect(posts.get_absolute_url())
-        print(form.errors, images_form.errors)
+        return super().form_valid(form)
+
+    def test_func(self):
+        return check_users(self.get_object().author, self.request.user)
 
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
